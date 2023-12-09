@@ -9,6 +9,8 @@
 # include <fcntl.h>
 # include <string.h>
 
+# include "token/token.h"
+
 typedef enum e_error
 {
 	E_SYSTEM,
