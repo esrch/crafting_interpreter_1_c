@@ -114,6 +114,11 @@ void expr_destruct(t_expr **expr_ptr)
 		unary_expr_destruct(expr_ptr);
 	else if ((*expr_ptr)->expr_type == LITERAL_EXPR)
 		literal_expr_destruct(expr_ptr);
-	else
+	else if ((*expr_ptr)->expr_type == GROUPING_EXPR)
 		grouping_expr_destruct(expr_ptr);
+	else
+	{
+		ft_printf("Should never happen. Invalid expression type in expr_destruct().\n");
+		exit(1);
+	}
 }

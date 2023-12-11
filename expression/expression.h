@@ -2,6 +2,7 @@
 
 # define EXPRESSION_H
 
+# include "../libft/libft.h"
 # include "../token/token.h"
 
 typedef enum e_expr_type
