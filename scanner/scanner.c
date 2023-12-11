@@ -3,8 +3,11 @@
 static int scan_token(t_scanner *scanner, t_token_list *token_list);
 static t_token *add_token(t_scanner *scanner, t_token_list *token_list,
 	t_token_type token_type, void *literal);
+static int string(t_scanner *scanner, t_token_list *token_list);
+static int number(t_scanner *scanner, t_token_list *token_list);
 static char advance(t_scanner *scanner);
 static char peek(t_scanner *scanner);
+static char peek_next(t_scanner *scanner);
 static bool match(t_scanner *scanner, char expected);
 static bool is_at_end(t_scanner *scanner);
 
@@ -119,12 +122,77 @@ static int scan_token(t_scanner *scanner, t_token_list *token_list)
 		;
 	else if (c == '\n')
 		scanner->line++;
+	else if (c == '"')
+		return (string(scanner, token_list));
+	else if (ft_isdigit(c))
+		return (number(scanner, token_list));
 	else
 	{
 		print_line_error(scanner->line, ft_strdup("Unexpected character."));
 		return (-1);
 	}
 
+	return (0);
+}
+
+static int string(t_scanner *scanner, t_token_list *token_list)
+{
+	char *value;
+
+	while (peek(scanner) != '"' && !is_at_end(scanner)) {
+		if (peek(scanner) == '\n')
+			scanner->line++;
+		advance(scanner);
+	}
+
+	if (is_at_end(scanner))
+	{
+		print_line_error(scanner->line, ft_strdup("Unterminated string."));
+		return (-1);
+	}
+
+	// Consume the closing ".
+	advance(scanner);
+
+	// Trim the surrounding quotes.
+	value = ft_substr(scanner->source, scanner->start + 1, scanner->current - scanner->start - 1);
+	if (!value)
+	{
+		print_system_error(0);
+		return (-1);
+	}
+
+	if (!add_token(scanner, token_list, T_STRING, value))
+	{
+		free(value);
+		return (-1);
+	}
+	return (0);
+}
+
+static int number(t_scanner *scanner, t_token_list *token_list)
+{
+	double *value_ptr;
+
+	while (ft_isdigit(peek(scanner)))
+		advance(scanner);
+	
+	if (peek(scanner) == '.' && ft_isdigit(peek_next(scanner)))
+	{
+		advance(scanner);
+		while (ft_isdigit(peek(scanner)))
+			advance(scanner);
+	}
+
+	value_ptr = malloc(sizeof(double));
+	if (!value_ptr)
+		return (-1);
+	*value_ptr = strtod(scanner->source + scanner->current, NULL);
+	if (!add_token(scanner, token_list, T_NUMBER, value_ptr))
+	{
+		free(value_ptr);
+		return (-1);
+	}
 	return (0);
 }
 
@@ -157,6 +225,15 @@ static char advance(t_scanner *scanner)
 static char peek(t_scanner *scanner)
 {
 	return (scanner->source[scanner->current]);
+}
+
+static char peek_next(t_scanner *scanner)
+{
+	if (scanner->source[scanner->current] == 0
+		|| scanner->source[scanner->current + 1] == 0)
+		return (0);
+	
+	return (scanner->source[scanner->current + 1]);
 }
 
 static bool match(t_scanner *scanner, char expected)
