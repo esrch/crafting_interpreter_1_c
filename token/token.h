@@ -65,6 +65,13 @@ typedef struct s_token
 	int line;
 }	t_token;
 
+typedef struct s_token_list
+{
+	t_token **list;
+	int size;
+	int count;
+}	t_token_list;
+
 // Token type.
 char *token_type_to_string(t_token_type token_type);
 
@@ -72,5 +79,10 @@ char *token_type_to_string(t_token_type token_type);
 t_token *token_construct(t_token_type type, char *lexeme, void *literal, int line);
 void token_destruct(t_token **token_ptr);
 char *token_to_string(t_token *token);
+
+// Token list.
+t_token_list *token_list_construct();
+void token_list_destruct(t_token_list **token_list_ptr);
+t_token *token_list_add(t_token_list *token_list, t_token *new_token);
 
 #endif

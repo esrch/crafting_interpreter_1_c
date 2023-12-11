@@ -19,6 +19,8 @@ void token_destruct(t_token **token_ptr)
 	t_token *token;
 
 	token = *token_ptr;
+	if (!token)
+		return ;
 	free(token->lexeme);
 	free(token->literal);
 	free(token);

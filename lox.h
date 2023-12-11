@@ -9,20 +9,12 @@
 # include <fcntl.h>
 # include <string.h>
 
+# include "errors/errors.h"
 # include "token/token.h"
-
-typedef enum e_error
-{
-	E_SYSTEM,
-	E_ARG_COUNT
-}	t_error;
+# include "scanner/scanner.h"
 
 // File loader
 char *load_script(char *path);
-
-// Errors
-void print_error(t_error error);
-void print_and_exit(t_error error);
 
 // Utils
 char *append_str(char *initial_str, char *append_str, int append_size);
