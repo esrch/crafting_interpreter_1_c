@@ -5,6 +5,7 @@ static t_token *add_token(t_scanner *scanner, t_token_list *token_list,
 	t_token_type token_type, void *literal);
 static int string(t_scanner *scanner, t_token_list *token_list);
 static int number(t_scanner *scanner, t_token_list *token_list);
+static int identifier(t_scanner *scanner, t_token_list *token_list);
 static char advance(t_scanner *scanner);
 static char peek(t_scanner *scanner);
 static char peek_next(t_scanner *scanner);
@@ -126,6 +127,8 @@ static int scan_token(t_scanner *scanner, t_token_list *token_list)
 		return (string(scanner, token_list));
 	else if (ft_isdigit(c))
 		return (number(scanner, token_list));
+	else if (ft_isalpha(c) || c == '_')
+		return (identifier(scanner, token_list));
 	else
 	{
 		print_line_error(scanner->line, ft_strdup("Unexpected character."));
@@ -193,6 +196,50 @@ static int number(t_scanner *scanner, t_token_list *token_list)
 		free(value_ptr);
 		return (-1);
 	}
+	return (0);
+}
+
+static int keyword(t_scanner *scanner, t_token_list *token_list, bool *is_keyword)
+{
+	int i;
+	int keyword_len;
+	static char *keywords[] = {"and", "class", "else", "false", "for", "fun", "if", "nil",
+		"or", "print", "return", "super", "this", "true", "var", "while", NULL};
+	static t_token_type token_types[] = {T_AND, T_CLASS, T_ELSE, T_FALSE, T_FOR, T_FUN, T_IF, T_NIL,
+		T_OR, T_PRINT, T_RETURN, T_SUPER, T_THIS, T_TRUE, T_VAR, T_WHILE};
+	
+	i = 0;
+	keyword_len = scanner->current - scanner->start;
+	while (keywords[i])
+	{
+		if (ft_strncmp(keywords[i], scanner->source + scanner->start, keyword_len) == 0)
+		{
+			*is_keyword = true;
+			if (!add_token(scanner, token_list, token_types[i], NULL))
+				return (-1);
+			return (0);
+		}
+		i++;
+	}
+
+	*is_keyword = false;
+	return (0);
+}
+
+static int identifier(t_scanner *scanner, t_token_list *token_list)
+{
+	bool is_keyword;
+	int result;
+
+	while (ft_isalnum(peek(scanner)) || peek(scanner) == '_')
+		advance(scanner);
+	
+	result = keyword(scanner, token_list, &is_keyword);
+	if (is_keyword)
+		return (result);
+
+	if (!add_token(scanner, token_list, T_IDENTIFIER, NULL))
+		return (-1);
 	return (0);
 }
 
