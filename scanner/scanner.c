@@ -33,7 +33,6 @@ void scanner_destruct(t_scanner **scanner_ptr)
 	scanner = *scanner_ptr;
 	if (!scanner)
 		return ;
-	free(scanner->source);
 	free(scanner);
 	*scanner_ptr = NULL;
 }
