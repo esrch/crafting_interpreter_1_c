@@ -72,7 +72,7 @@ static int run(char *script)
 		i++;
 	}
 
-	token_list_destruct(&token_list);
 	scanner_destruct(&scanner);
+	token_list_destruct(&token_list);
 	return (0);
 }
