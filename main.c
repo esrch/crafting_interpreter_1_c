@@ -35,7 +35,7 @@ static void runPrompt(void)
 	while (line)
 	{
 		run(line);
-		// free(line);
+		free(line);
 		write(1, "> ", 2);
 		line = read_line_from_stdin();
 	}
