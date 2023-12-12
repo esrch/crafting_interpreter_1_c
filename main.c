@@ -56,11 +56,9 @@ static int run(char *script)
 		return (-1);
 	}
 	token_list = scan_tokens(scanner);
+	scanner_destruct(&scanner);
 	if (!token_list)
-	{
-		scanner_destruct(&scanner);
 		return (-1);
-	}
 	
 	i = 0;
 	while (i < token_list->count)
@@ -72,7 +70,6 @@ static int run(char *script)
 		i++;
 	}
 
-	scanner_destruct(&scanner);
 	token_list_destruct(&token_list);
 	return (0);
 }

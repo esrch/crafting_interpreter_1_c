@@ -2,6 +2,8 @@
 
 # define PARSER_H
 
+# include <stdbool.h>
+
 # include "../token/token.h"
 # include "../expression/expression.h"
 
