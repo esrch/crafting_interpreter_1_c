@@ -14,6 +14,7 @@
 # include "expression/expression.h"
 # include "scanner/scanner.h"
 # include "parser/parser.h"
+# include "ast_printer/ast_printer.h"
 
 // File loader
 char *load_script(char *path);

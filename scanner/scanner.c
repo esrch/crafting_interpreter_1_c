@@ -157,7 +157,7 @@ static int string(t_scanner *scanner, t_token_list *token_list)
 	advance(scanner);
 
 	// Trim the surrounding quotes.
-	value = ft_substr(scanner->source, scanner->start + 1, scanner->current - scanner->start - 1);
+	value = ft_substr(scanner->source, scanner->start + 1, scanner->current - scanner->start - 2);
 	if (!value)
 	{
 		print_system_error(0);
@@ -189,7 +189,7 @@ static int number(t_scanner *scanner, t_token_list *token_list)
 	value_ptr = malloc(sizeof(double));
 	if (!value_ptr)
 		return (-1);
-	*value_ptr = strtod(scanner->source + scanner->current, NULL);
+	*value_ptr = strtod(scanner->source + scanner->start, NULL);
 	if (!add_token(scanner, token_list, T_NUMBER, value_ptr))
 	{
 		free(value_ptr);

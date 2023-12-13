@@ -76,6 +76,8 @@ static int run(char *script)
 	ast = parse(token_list);
 	if (!ast)
 		return (-1);
+	
+	print_ast(ast);
 
 	expr_destruct(&ast);
 	token_list_destruct(&token_list);
