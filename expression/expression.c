@@ -29,40 +29,6 @@ void binary_expr_destruct(t_expr **expr_ptr)
 	*expr_ptr = NULL;
 }
 
-void unary_expr_destruct(t_expr **expr_ptr)
-{
-	t_expr *expr;
-
-	expr = *expr_ptr;
-	token_destruct(&expr->members.unary.op);
-	expr_destruct(&expr->members.unary.expr);
-
-	free(expr);
-	*expr_ptr = NULL;
-}
-
-void literal_expr_destruct(t_expr **expr_ptr)
-{
-	t_expr *expr;
-
-	expr = *expr_ptr;
-	free(expr->members.literal.value);
-
-	free(expr);
-	*expr_ptr = NULL;
-}
-
-void grouping_expr_destruct(t_expr **expr_ptr)
-{
-	t_expr *expr;
-
-	expr = *expr_ptr;
-	expr_destruct(&expr->members.grouping.expr);
-
-	free(expr);
-	*expr_ptr = NULL;
-}
-
 t_expr *unary_expr_construct(t_token *op, t_expr *expr)
 {
 	t_expr *unary_expr;
@@ -78,7 +44,19 @@ t_expr *unary_expr_construct(t_token *op, t_expr *expr)
 	return (unary_expr);
 }
 
-t_expr *literal_expr_construct(void *value)
+void unary_expr_destruct(t_expr **expr_ptr)
+{
+	t_expr *expr;
+
+	expr = *expr_ptr;
+	token_destruct(&expr->members.unary.op);
+	expr_destruct(&expr->members.unary.expr);
+
+	free(expr);
+	*expr_ptr = NULL;
+}
+
+t_expr *literal_expr_construct(t_literal_type type, void *value)
 {
 	t_expr *literal_expr;
 
@@ -87,9 +65,21 @@ t_expr *literal_expr_construct(void *value)
 		return (NULL);
 
 	literal_expr->expr_type = LITERAL_EXPR;
+	literal_expr->members.literal.type = type;
 	literal_expr->members.literal.value = value;
 	
 	return (literal_expr);
+}
+
+void literal_expr_destruct(t_expr **expr_ptr)
+{
+	t_expr *expr;
+
+	expr = *expr_ptr;
+	free(expr->members.literal.value);
+
+	free(expr);
+	*expr_ptr = NULL;
 }
 
 t_expr *grouping_expr_construct(t_expr *expr)
@@ -104,6 +94,17 @@ t_expr *grouping_expr_construct(t_expr *expr)
 	grouping_expr->members.grouping.expr = expr;
 
 	return (grouping_expr);
+}
+
+void grouping_expr_destruct(t_expr **expr_ptr)
+{
+	t_expr *expr;
+
+	expr = *expr_ptr;
+	expr_destruct(&expr->members.grouping.expr);
+
+	free(expr);
+	*expr_ptr = NULL;
 }
 
 void expr_destruct(t_expr **expr_ptr)

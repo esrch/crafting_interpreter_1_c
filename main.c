@@ -44,10 +44,11 @@ static void runPrompt(void)
 
 static int run(char *script)
 {
-	int i;
 	t_scanner *scanner;
 	t_token_list *token_list;
-	char *token_string;
+	// int i;
+	// char *token_string;
+	t_expr *ast;
 
 	scanner = scanner_construct(script);
 	if (!scanner)
@@ -60,6 +61,7 @@ static int run(char *script)
 	if (!token_list)
 		return (-1);
 	
+	/*
 	i = 0;
 	while (i < token_list->count)
 	{
@@ -69,7 +71,13 @@ static int run(char *script)
 		free(token_string);
 		i++;
 	}
+	*/
 
+	ast = parse(token_list);
+	if (!ast)
+		return (-1);
+
+	expr_destruct(&ast);
 	token_list_destruct(&token_list);
 	return (0);
 }

@@ -22,3 +22,8 @@ void print_line_error(int line, char *message)
 		ft_printf("[line %d] Error: %s\n", line, message);
 	free(message);
 }
+
+void print_token_error(t_token *token, char *message)
+{
+	print_line_error(token->line, message);
+}

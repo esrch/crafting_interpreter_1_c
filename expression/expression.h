@@ -13,6 +13,14 @@ typedef enum e_expr_type
 	GROUPING_EXPR
 }	t_expr_type;
 
+typedef enum e_literal_type
+{
+	LITERAL_BOOL,
+	LITERAL_NIL,
+	LITERAL_NUMBER,
+	LITERAL_STRING
+}	t_literal_type;
+
 struct s_expr;
 
 typedef struct s_binary_expr_members
@@ -30,6 +38,7 @@ typedef struct s_unary_expr_members
 
 typedef struct s_literal_expr_members
 {
+	t_literal_type type;
 	void *value;
 }	t_literal_expr_members;
 
@@ -55,7 +64,7 @@ typedef struct s_expr
 // Expression.
 t_expr *binary_expr_construct(t_expr *left, t_token *op, t_expr *right);
 t_expr *unary_expr_construct(t_token *op, t_expr *expr);
-t_expr *literal_expr_construct(void *value);
+t_expr *literal_expr_construct(t_literal_type type, void *value);
 t_expr *grouping_expr_construct(t_expr *expr);
 void expr_destruct(t_expr **expr_ptr);
 

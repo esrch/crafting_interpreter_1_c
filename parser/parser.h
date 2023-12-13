@@ -6,6 +6,7 @@
 
 # include "../token/token.h"
 # include "../expression/expression.h"
+# include "../errors/errors.h"
 
 typedef struct s_parser
 {
@@ -14,7 +15,6 @@ typedef struct s_parser
 }	t_parser;
 
 // Parser.
-t_parser *parser_construct(t_token_list *token_list);
-void parser_destruct(t_parser **parser_ptr);
+t_expr *parse(t_token_list *token_list);
 
 #endif

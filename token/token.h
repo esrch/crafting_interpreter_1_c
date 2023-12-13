@@ -6,6 +6,8 @@
 # include <string.h>
 # include <stdio.h>
 
+# include "../libft/libft.h"
+
 typedef enum e_token_type
 {
 	// Single-character tokens.
@@ -78,6 +80,7 @@ char *token_type_to_string(t_token_type token_type);
 // Token.
 t_token *token_construct(t_token_type type, char *lexeme, void *literal, int line);
 void token_destruct(t_token **token_ptr);
+t_token *token_cpy(t_token *token);
 char *token_to_string(t_token *token);
 
 // Token list.

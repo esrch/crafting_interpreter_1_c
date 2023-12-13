@@ -11,7 +11,9 @@
 
 # include "errors/errors.h"
 # include "token/token.h"
+# include "expression/expression.h"
 # include "scanner/scanner.h"
+# include "parser/parser.h"
 
 // File loader
 char *load_script(char *path);

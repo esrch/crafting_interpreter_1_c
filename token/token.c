@@ -27,6 +27,59 @@ void token_destruct(t_token **token_ptr)
 	*token_ptr = NULL;
 }
 
+static t_token *token_cpy_number(t_token *token, char *lexeme_cpy)
+{
+	double literal_value;
+	double *literal_cpy;
+
+	literal_cpy = malloc(sizeof(double));
+	if (!literal_cpy)
+	{
+		free(lexeme_cpy);
+		return (NULL);
+	}
+
+	literal_value = *(double*)token->literal;
+	*literal_cpy = literal_value;
+	
+	return (token_construct(token->type, lexeme_cpy, literal_cpy, token->line));
+}
+
+static t_token *token_cpy_string(t_token *token, char *lexeme_cpy)
+{
+	char *s;
+	char *literal_cpy;
+
+	s = (char*)token->literal;
+	literal_cpy = ft_strdup(s);
+	if (!literal_cpy)
+	{
+		free(lexeme_cpy);
+		return (NULL);
+	}
+
+	return (token_construct(token->type, lexeme_cpy, literal_cpy, token->line));
+}
+
+t_token *token_cpy(t_token *token)
+{
+	char *lexeme_cpy;
+
+	lexeme_cpy = ft_strdup(token->lexeme);
+	if (!lexeme_cpy)
+		return (NULL);
+
+	if (token->type == T_NUMBER && token->literal)
+		return (token_cpy_number(token, lexeme_cpy));
+	if (token->type == T_STRING && token->literal)
+		return (token_cpy_string(token, lexeme_cpy));
+
+	if (token->literal)
+		ft_printf("token_cpy: Unreachable code.");
+
+	return (token_construct(token->type, lexeme_cpy, NULL, token->line));
+}
+
 char *token_to_string(t_token *token)
 {
 	char *result;
