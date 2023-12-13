@@ -44,42 +44,20 @@ static void runPrompt(void)
 
 static int run(char *script)
 {
-	t_scanner *scanner;
 	t_token_list *token_list;
-	// int i;
-	// char *token_string;
 	t_expr *ast;
 
-	scanner = scanner_construct(script);
-	if (!scanner)
-	{
-	 	print_system_error(0);
-		return (-1);
-	}
-	token_list = scan_tokens(scanner);
-	scanner_destruct(&scanner);
+	token_list = scan(script);
 	if (!token_list)
 		return (-1);
-	
-	/*
-	i = 0;
-	while (i < token_list->count)
-	{
-		token_string = token_to_string(token_list->list[i]);
-		if (token_string)
-			ft_printf("%s\n", token_string);
-		free(token_string);
-		i++;
-	}
-	*/
 
 	ast = parse(token_list);
+	token_list_destruct(&token_list);
 	if (!ast)
 		return (-1);
 	
 	print_ast(ast);
 
 	expr_destruct(&ast);
-	token_list_destruct(&token_list);
 	return (0);
 }

@@ -12,33 +12,9 @@ static char peek_next(t_scanner *scanner);
 static bool match(t_scanner *scanner, char expected);
 static bool is_at_end(t_scanner *scanner);
 
-t_scanner *scanner_construct(char *source)
+t_token_list *scan(char *source)
 {
-	t_scanner *result;
-
-	result = malloc(sizeof(*result));
-	if (!result)
-		return (NULL);
-	result->source = source;
-	result->start = 0;
-	result->current = 0;
-	result->line = 1;
-	return (result);
-}
-
-void scanner_destruct(t_scanner **scanner_ptr)
-{
-	t_scanner *scanner;
-
-	scanner = *scanner_ptr;
-	if (!scanner)
-		return ;
-	free(scanner);
-	*scanner_ptr = NULL;
-}
-
-t_token_list *scan_tokens(t_scanner *scanner)
-{
+	t_scanner scanner;
 	t_token_list *token_list;
 	bool had_error;
 
@@ -46,11 +22,16 @@ t_token_list *scan_tokens(t_scanner *scanner)
 	if (!token_list)
 		return (NULL);
 	
+	scanner.source = source;
+	scanner.start = 0;
+	scanner.current = 0;
+	scanner.line = 1;
+
 	had_error = false;
-	while (!is_at_end(scanner))
+	while (!is_at_end(&scanner))
 	{
-		scanner->start = scanner->current;
-		if (scan_token(scanner, token_list) < 0)
+		scanner.start = scanner.current;
+		if (scan_token(&scanner, token_list) < 0)
 			had_error = true;
 	}
 
@@ -61,7 +42,7 @@ t_token_list *scan_tokens(t_scanner *scanner)
 	}
 
 	// Add EOF token.
-	if (!token_list_add(token_list, token_construct(T_EOF, NULL, NULL, scanner->line)))
+	if (!token_list_add(token_list, token_construct(T_EOF, NULL, NULL, scanner.line)))
 	{
 		token_list_destruct(&token_list);
 		return (NULL);

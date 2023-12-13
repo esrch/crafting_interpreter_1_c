@@ -18,8 +18,6 @@ typedef struct s_scanner
 }	t_scanner;
 
 // Scanner.
-t_scanner *scanner_construct(char *source);
-void scanner_destruct(t_scanner **scanner_ptr);
-t_token_list *scan_tokens(t_scanner *scanner);
+t_token_list *scan(char *source);
 
 #endif

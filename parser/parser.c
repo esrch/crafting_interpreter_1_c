@@ -234,7 +234,10 @@ static bool match(t_parser *parser, t_token_type token_type)
 static t_token *consume(t_parser *parser, t_token_type token_type, char *message)
 {
 	if (check(parser, token_type))
+	{
+		free(message);
 		return (advance(parser));
+	}
 	
 	print_token_error(peek(parser), message);
 	return (NULL);
